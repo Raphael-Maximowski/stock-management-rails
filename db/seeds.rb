@@ -1,9 +1,26 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+puts "🌱 Iniciando processo de seed..."
+puts "=" * 50
+
+# Carregar todos os arquivos .rb da pasta seeds
+seed_files = Dir[File.join(Rails.root, 'db', 'seeds', '*.rb')].sort
+
+if seed_files.empty?
+  puts "⚠️  Nenhum arquivo de seed encontrado na pasta db/seeds/"
+  puts "✅ Processo concluído!"
+  exit
+end
+
+seed_files.each do |file|
+  puts "📁 Executando: #{File.basename(file)}"
+  load file
+  puts "✅ #{File.basename(file)} - concluído!"
+  puts "-" * 30
+end
+
+puts "=" * 50
+puts "🎉 Seed completo! Todos os arquivos foram executados."
+puts "📊 Estatísticas:"
+puts "   - Users: #{User.count}"
+puts "   - Products: #{Product.count}"
+puts "   - Carts: #{Cart.count}"
+puts "   - CartProducts: #{CartProduct.count}"
