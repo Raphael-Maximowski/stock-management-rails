@@ -5,8 +5,10 @@ class CreateProducts < ActiveRecord::Migration[8.0]
       t.text :description
       t.decimal :price, precision: 10, scale: 2, null: false
       t.integer :available_stock, null: false
-      t.integer :reserved_stock, null: false
+      t.integer :reserved_stock, default: 0
       t.boolean :active, default: true
+
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end

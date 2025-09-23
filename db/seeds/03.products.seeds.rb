@@ -1,5 +1,6 @@
 10.times do |i|
   product_name = Faker::Commerce.unique.product_name
+  random_user_id = User.pluck(:id).sample
   
   Product.create!(
     name: product_name,
@@ -8,6 +9,7 @@
     available_stock: Faker::Number.between(from: 0, to: 200),
     reserved_stock: Faker::Number.between(from: 0, to: 20),
     active: Faker::Boolean.boolean(true_ratio: 0.8), 
+    user_id: random_user_id, 
     created_at: Faker::Time.between(from: 1.year.ago, to: Time.now)
   )
 end

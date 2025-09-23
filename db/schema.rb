@@ -36,11 +36,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
     t.text "description"
     t.decimal "price", precision: 10, scale: 2, null: false
     t.integer "available_stock", null: false
-    t.integer "reserved_stock", null: false
+    t.integer "reserved_stock", default: 0
     t.boolean "active", default: true
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_products_on_name", unique: true
+    t.index ["user_id"], name: "index_products_on_user_id"
     t.check_constraint "`available_stock` >= 0", name: "positive_avaliable_stock"
     t.check_constraint "`price` >= 0", name: "positive_price"
     t.check_constraint "`reserved_stock` >= 0", name: "positive_reserved_stock"
@@ -86,6 +88,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
   add_foreign_key "cart_products", "carts"
   add_foreign_key "cart_products", "products"
   add_foreign_key "carts", "users"
+  add_foreign_key "products", "users"
   add_foreign_key "stock_histories", "carts"
   add_foreign_key "stock_histories", "products"
   add_foreign_key "stock_reservations", "carts"
