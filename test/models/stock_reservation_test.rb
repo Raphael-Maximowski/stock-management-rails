@@ -3,7 +3,6 @@
 # Table name: stock_reservations
 #
 #  id                 :bigint           not null, primary key
-#  expires_at         :datetime         not null
 #  quantity           :integer          not null
 #  reservation_status :string(255)      default("active")
 #  created_at         :datetime         not null

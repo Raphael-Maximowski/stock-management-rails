@@ -359,7 +359,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  active_model_serializers
+  active_model_serializers (~> 0.10.13)
   annotaterb
   bootsnap
   brakeman

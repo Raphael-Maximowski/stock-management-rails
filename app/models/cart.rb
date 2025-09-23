@@ -4,6 +4,7 @@
 #
 #  id           :bigint           not null, primary key
 #  cart_status  :string(255)      default("active")
+#  expires_at   :datetime         not null
 #  total_amount :decimal(10, 2)   default(0.0)
 #  total_items  :integer          default(0)
 #  created_at   :datetime         not null

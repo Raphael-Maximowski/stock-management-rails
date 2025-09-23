@@ -5,6 +5,10 @@ class UserService
         @repository = repository
     end
 
+    def user_exists_based_in_role?(user_id, role)
+        @repository.user_exists_based_in_role?(user_id, role)
+    end
+
     def find_user(id)
         user = @repository.find(id)
         raise_if_model_not_found!(user.nil?, 'User Not Found')
