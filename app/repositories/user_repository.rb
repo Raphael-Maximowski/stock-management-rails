@@ -22,6 +22,14 @@ class UserRepository
         @model.create(params) 
     end
 
+    def manager_exists?(id, role)
+        @model.where(id: id, role: role, status: 'active').exists?
+    end
+
+    def user_exists?(id)
+        @model.where(id: id).exists?
+    end
+    
     def email_exists?(email)
         @model.where(email: email.downcase).exists?
     end

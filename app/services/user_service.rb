@@ -40,7 +40,7 @@ class UserService
         params_bussiness_rules_validation = update_user_business_rules(params)
         raise_if_business_rule_violated!(params_bussiness_rules_validation, 'Validation Failed', @business_errors)
         
-        user = @repository.update(user, params)
+        user = @repository.update(user, params_validation.to_h)
         user
     end
 
