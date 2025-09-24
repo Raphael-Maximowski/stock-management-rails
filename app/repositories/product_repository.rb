@@ -24,6 +24,10 @@ class ProductRepository
         @model.where(name: name).exists?
     end
 
+    def product_name_registered_excluding_id?(name, id)
+        @model.where(name: name).where.not(id: id).exists?
+    end
+
     def product_available?(id, available_stock)
         @model.where(id: id, active: 1).where("available_stock > ?", available_stock).exists?
     end
