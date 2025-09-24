@@ -6,6 +6,10 @@ class ProductService
         @user_repository = user_repository
     end
 
+    def product_available?(product_id, available_stock)
+        @product_repository.product_available?(product_id, available_stock)
+    end
+
     def find_product(id)
         @product = @product_repository.find(id)
         raise_if_model_not_found!(@product.nil?, 'Product Not Found')
@@ -25,6 +29,26 @@ class ProductService
         raise_if_business_rule_violated!(params_business_validation, 'Product Validation Failed', @business_errors)
 
         @product = @product_repository.create(params_validation.to_h)
+    end
+
+    def update_product_stock_after_remove(product, quantity)
+        @product_repository.update(product, { 
+                reserved_stock: product.reserved_stock - quantity, 
+                available_stock: product.available_stock + quantity 
+            }
+        )
+    end
+
+    def update_product_stock_after_insert(product, quantity)
+        @product_repository.update(product, { 
+                reserved_stock: product.reserved_stock + quantity, 
+                available_stock: product.available_stock - quantity 
+            }
+        )
+    end
+
+    def update_product_stock_after_checkout(product, quantity)
+        @product_repository.update(product , { reserved_stock: product.reserved_stock - quantity })
     end
 
     def update_product(params)

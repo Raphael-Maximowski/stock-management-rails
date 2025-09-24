@@ -23,4 +23,8 @@ class ProductRepository
     def product_name_registered?(name)
         @model.where(name: name).exists?
     end
+
+    def product_available?(id, available_stock)
+        @model.where(id: id, active: 1).where("available_stock > ?", available_stock).exists?
+    end
 end

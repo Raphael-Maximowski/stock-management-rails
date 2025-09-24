@@ -25,6 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
     t.string "cart_status", default: "active"
     t.integer "total_items", default: 0
     t.decimal "total_amount", precision: 10, scale: 2, default: "0.0"
+    t.datetime "expires_at", null: false
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -66,7 +67,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
   create_table "stock_reservations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "quantity", null: false
     t.string "reservation_status", default: "active"
-    t.datetime "expires_at", null: false
     t.bigint "cart_id", null: false
     t.bigint "product_id", null: false
     t.datetime "created_at", null: false

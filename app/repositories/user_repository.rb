@@ -4,6 +4,10 @@ class UserRepository
         @model = model
     end
 
+    def user_exists_based_in_role?(user_id, role)
+        @model.where(id: user_id, role: role, status: 'active').exists?
+    end
+
     def find(id)
         @model.find_by(id: id)
     end
@@ -30,6 +34,10 @@ class UserRepository
         @model.where(id: id).exists?
     end
     
+    def client_exists?(id, role)
+        @model.where(id: id, role: role, status: 'active').exists?
+    end
+
     def email_exists?(email)
         @model.where(email: email.downcase).exists?
     end
