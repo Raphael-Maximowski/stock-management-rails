@@ -1,11 +1,6 @@
 class UserRepository 
-
     def initialize(model = User)
         @model = model
-    end
-
-    def user_exists_based_in_role?(user_id, role)
-        @model.where(id: user_id, role: role, status: 'active').exists?
     end
 
     def find(id)
@@ -26,16 +21,12 @@ class UserRepository
         @model.create(params) 
     end
 
-    def manager_exists?(id, role)
-        @model.where(id: id, role: role, status: 'active').exists?
-    end
-
     def user_exists?(id)
         @model.where(id: id).exists?
     end
-    
-    def client_exists?(id, role)
-        @model.where(id: id, role: role, status: 'active').exists?
+
+    def user_exists_based_in_role?(user_id, role)
+        @model.where(id: user_id, role: role, status: 'active').exists?
     end
 
     def email_exists?(email)
