@@ -102,7 +102,7 @@ class ProductService
     # Singular Validations 
 
     def validate_product_owner_exists(user_id)
-        @user_repository.manager_exists?(user_id, 'manager')
+        @user_repository.user_exists_based_in_role?(user_id, 'manager')
     end
 
     def validate_product_name_registered_excluding_id?(name, id)

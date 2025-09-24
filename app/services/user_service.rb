@@ -10,66 +10,79 @@ class UserService
     end
 
     def find_user(id)
-        user = @repository.find(id)
-        raise_if_model_not_found!(user.nil?, 'User Not Found')
-        
-        user
+        find_and_set_user(id)
     end
 
     def list_users
         @repository.list
     end
 
-    def create_user(params)
-        params = normalize_params(params)
-
-        params_validation = UserCreateSchema.new().call(params)
-        raise_if_model_invalid!(params_validation.failure?, 'Validation Failed', params_validation.errors.to_h)
-
-        params_bussiness_rules_validation = create_user_business_rules(params)
-        raise_if_business_rule_violated!(params_bussiness_rules_validation, 'Validation Failed', @business_errors)
-
-        @repository.create(params_validation.to_h)
+    def create_user(user_params = normalize_params(params))
+        create_user_schema_validation(user_params)
+        create_user_business_rules(user_params)
+        @repository.create(user_params)
     end
 
-    def update_user(params)
-        params = normalize_params(params)
-
-        user = @repository.find(params[:id])
-        raise_if_model_not_found!(user.nil?, 'User Not Found')
-
-        params_validation = UserUpdateSchema.new().call(params)
-        raise_if_model_invalid!(params_validation.failure?, 'Validation Failed', params_validation.errors.to_h)
-    
-        params_bussiness_rules_validation = update_user_business_rules(params)
-        raise_if_business_rule_violated!(params_bussiness_rules_validation, 'Validation Failed', @business_errors)
-        
-        user = @repository.update(user, params_validation.to_h)
-        user
+    def update_user(user_params = normalize_params(params))
+        find_and_set_user(user_params[:id])
+        update_user_schema_validation(user_params)
+        update_user_business_rules(user_params)
+        update_user_entity(user_params)
     end
 
     def delete_user(id)
-        user = @repository.find(id)
-        raise_if_model_not_found!(user.nil?, 'User Not Found')
-        
-        user_new_status = { status: 'inactive' }
-        user = @repository.update(user, user_new_status)
+        find_and_set_user(id)
+        update_user_entity({ status: 'inactive' })
     end
 
     private
+
+    # Own Methods
+
+    def update_user_entity(new_params)
+        @repository.update(@user, new_params)
+    end
+
+    def find_and_set_user(id)
+        @user = @repository.find(id) || raise_if_model_not_found!(user.nil?, 'User Not Found')
+    end
+
+    def normalize_params(params)
+      params[:email] = params[:email].downcase if params[:email]
+      params
+    end
+
+    # Schemas And Business Validations
+
+    def update_user_schema_validation(params)
+        schema_validation = UserUpdateSchema.new().call(params)
+        raise_if_model_invalid!(schema_validation.failure?, 'Validation Failed', schema_validation.errors.to_h)
+    end
+
     def update_user_business_rules(params)
         @business_errors = {}
-        @business_errors[:email] = 'has already been taken' if validate_email_exists_excluding_id?(params[:email], params[:id])
-        
-        @business_errors.any?
+        if validate_email_exists_excluding_id?(params[:email], params[:id])
+            @business_errors[:email] = 'has already been taken'
+        end 
+    
+        raise_if_business_rule_violated!(@business_errors.any?, 'Validation Failed', @business_errors)
     end
     
+    def create_user_schema_validation(params)
+        schema_validation = UserCreateSchema.new().call(params)
+        raise_if_model_invalid!(schema_validation.failure?, 'Validation Failed', schema_validation.errors.to_h)
+    end
+
     def create_user_business_rules(params)
         @business_errors = {}
-        @business_errors[:email] = 'has already been taken' if validate_email_exists?(params[:email])
-        
-        @business_errors.any?
+        if validate_email_exists?(params[:email])
+            @business_errors[:email] = 'has already been taken' 
+        end
+    
+        raise_if_business_rule_violated!(@business_errors.any?, 'Validation Failed', @business_errors)
     end
+
+    # Singular Validations
 
     def validate_email_exists_excluding_id?(email, id)
         return unless email && id
@@ -79,10 +92,5 @@ class UserService
     def validate_email_exists?(email)
         return unless email
         @repository.email_exists?(email)
-    end
-
-    def normalize_params(params)
-      params[:email] = params[:email].downcase if params[:email]
-      params
     end
 end
