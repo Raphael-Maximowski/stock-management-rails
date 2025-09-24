@@ -7,7 +7,7 @@ class ProductRepository
         @model.find_by(id: id)
     end
 
-    def list
+    def list 
         @model.all
     end
 
@@ -22,6 +22,10 @@ class ProductRepository
 
     def product_name_registered?(name)
         @model.where(name: name).exists?
+    end
+
+    def product_name_registered_excluding_id?(name, id)
+        @model.where(name: name).where.not(id: id).exists?
     end
 
     def product_available?(id, available_stock)
