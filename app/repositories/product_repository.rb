@@ -7,7 +7,7 @@ class ProductRepository
         @model.find_by(id: id)
     end
 
-    def list
+    def list 
         @model.all
     end
 
