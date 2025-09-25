@@ -18,6 +18,6 @@ class Auth::AuthController < ApplicationController
   private
 
   def user_params
-    params.permit(:email, :password, :password_confirmation, :name).to_h
+    params.permit(:email, :password, :password_confirmation, :name, :role).to_h
   end
 end

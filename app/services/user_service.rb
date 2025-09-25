@@ -51,7 +51,7 @@ class UserService
         if @user&.authenticate(password)
             generate_token_and_render_user()
         else
-            raise_if_business_rule_violated!(true, 'Invalid Credentials')
+            raise_unauthorized_exception()
         end
     end
 
@@ -69,7 +69,7 @@ class UserService
     end
 
     def find_user_by_email(email)
-        @user = @repository.find_by_email(email) || raise_if_business_rule_violated!(@business_errors.any?, 'Invalid Credentials')
+        @user = @repository.find_by_email(email) || raise_unauthorized_exception()
     end
 
     def update_user_entity(new_params)

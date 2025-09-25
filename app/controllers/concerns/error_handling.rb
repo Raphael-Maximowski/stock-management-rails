@@ -25,8 +25,15 @@ module ErrorHandling
     end
   end
 
+  class Unauthorized < StandardError
+  end
+
   included do
     private
+
+    def raise_unauthorized_exception
+      raise Unauthorized.new
+    end
 
     def raise_if_model_not_found!(condition, message)
       if condition
