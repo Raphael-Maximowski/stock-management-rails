@@ -5,7 +5,7 @@ class ProductUpdateSchema < Dry::Validation::Contract
         optional(:available_stock).filled(:integer, gt?: 0)
         optional(:name).filled(:string, size?: 0..255)
         optional(:price).filled(:decimal, gt?: 0)
-        optional(:description).filled(:string, size?: 0..65535)
+        optional(:description).maybe(:string, size?: 0..65535)
     end 
 
     rule(:available_stock, :name, :price, :description) do

@@ -4,15 +4,15 @@ class UserRepository
     end
 
     def find(id)
-        @model.find_by(id: id)
+        @model.find_by(id: id, status: 'active')
     end
 
     def find_by_email(email)
-        @model.find_by(email: email)
+        @model.find_by(email: email, status: 'active')
     end
 
     def list
-        @model.all
+        @model.where(status: 'active')
     end
 
     def update(user, params)
@@ -26,7 +26,7 @@ class UserRepository
     end
 
     def user_exists?(id)
-        @model.where(id: id).exists?
+        @model.where(id: id, status: 'active').exists?
     end
 
     def user_exists_based_in_role?(user_id, role)

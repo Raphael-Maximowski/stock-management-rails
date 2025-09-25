@@ -57,7 +57,7 @@ class CartService
             increment_cart_product(params[:quantity])
             reserve_product(params[:quantity])          
         end
-        @product
+        @cart_product
     end
 
     def remove_product_from_cart(cart_id, product_id, params)
@@ -143,7 +143,7 @@ class CartService
     end
 
     def increment_cart_product(quantity)
-        @cart_product = @cart.cart_products.find_or_initialize_by(product_id: @product[:id])
+        @cart_product = @cart.cart_products.includes(:product).find_or_initialize_by(product_id: @product[:id])
         @cart_product.quantity ||= 0
         @cart_product.quantity += quantity
         @cart_product.save!
@@ -175,7 +175,7 @@ class CartService
     end
 
     def find_active_cart(cart_id)
-        @cart = @cart_repository.find_cart_based_in_status(cart_id, 'active')
+        @cart = @cart_repository.find(cart_id)
         raise_if_model_not_found!(@cart.nil?, 'Cart Not')
     end
 
@@ -300,7 +300,7 @@ class CartService
     end
 
     def validate_cart_available?(cart_id)
-        @cart_repository.cart_exists_based_in_status?(cart_id, 'active')
+        @cart_repository.cart_exists?(cart_id)
     end
 
     def validate_product_available?(product_id, minum_available_stock)

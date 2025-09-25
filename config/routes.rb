@@ -14,8 +14,8 @@ Rails.application.routes.draw do
     resources :carts do
       member do
         post 'insert/:product_id', to: 'carts#insert_product'
-        delete 'remove/:product_id', to: 'carts#remove_product'
-        delete 'remove-all-products', to: 'carts#remove_all_products'
+        put 'remove/:product_id', to: 'carts#remove_product'
+        put 'remove-all-products', to: 'carts#remove_all_products'
         post '/checkout', to: 'carts#checkout'
       end
     end

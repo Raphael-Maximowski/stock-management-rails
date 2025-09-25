@@ -17,12 +17,14 @@ class CartsController < ApplicationController
     end
 
     def insert_product
-        @product = @cart_service.insert_product_in_cart(
+        @cart_product = @cart_service.insert_product_in_cart(
             params[:id], 
             params[:product_id], 
             cart_product_params
         )
-        render json: @product, status: :created
+        render json: @cart_product, 
+                    include: :product,
+                    status: :created
     end
 
     def remove_product
