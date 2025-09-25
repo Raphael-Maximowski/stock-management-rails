@@ -95,7 +95,7 @@ class CartService
 
         @cart = @cart_repository.find(params[:id])
         raise_if_model_not_found!(@cart.nil?, 'Cart Not Found')
-        remove_all_products
+        remove_all_products()
     end
 
     def remove_all_products
@@ -176,7 +176,7 @@ class CartService
 
     def find_active_cart(cart_id)
         @cart = @cart_repository.find_cart_based_in_status(cart_id, 'active')
-        raise_if_business_rule_violated!(@cart.nil?, 'Cart Validation Failed', { cart_id: 'Invalid Cart' })
+        raise_if_model_not_found!(@cart.nil?, 'Cart Not')
     end
 
     def create_cart_with_expiration(params)
@@ -192,13 +192,11 @@ class CartService
         @business_errors = {}
 
         unless validate_cart_available?(params[:id])
-            @business_errors[:cart_id] = 'Invalid Cart'
-            raise_if_business_rule_violated!(true, 'Cart Validation Failed', @business_errors)
+            raise_if_model_not_found!(true, 'Cart Not Found')
         end
 
         unless validate_cart_belongs_to_user?(params[:id], params[:user_id])
-            @business_errors[:user_id] = 'You Do Not Have Access To This Cart'
-            raise_if_business_rule_violated!(true, 'Cart Validation Failed', @business_errors)
+            raise_if_model_not_found!(true, 'Cart Not Found')
         end
 
         unless validate_cart_has_any_product?(params[:id])
@@ -216,8 +214,7 @@ class CartService
         @business_errors = {}
 
         unless validate_cart_available?(cart_id)
-            @business_errors[:cart_id] = 'Invalid Cart'
-            raise_if_business_rule_violated!(true, 'Cart Validation Failed', @business_errors)
+            raise_if_model_not_found!(true, 'Cart Not Found')
         end
     end
 
@@ -225,13 +222,11 @@ class CartService
         validate_remove_product_base_business_rules(params[:id])
 
         unless validate_cart_belongs_to_user?(params[:id], params[:user_id])
-            @business_errors[:user_id] = 'You Do Not Have Access To This Cart'
-            
-            raise_if_business_rule_violated!(true, 'Cart Validation Failed', @business_errors)
+            raise_if_model_not_found!(true, 'Cart Not Found')
         end
 
         unless validate_cart_has_any_product?(params[:id])
-            @business_errors[:cart_id] = 'Empty Cart'
+            @business_errors[:cart_id] = 'Insert a Item In Your Cart To Remove'
             raise_if_business_rule_violated!(true, 'Cart Validation Failed', @business_errors)
         end
     end
@@ -251,21 +246,13 @@ class CartService
     end
 
     def validate_insert_product_business_rules(cart_id, product_id, params)
-        @business_errors = {}
-
         unless validate_product_available?(product_id, params[:quantity])
-            @business_errors[:product_id] = "Not Available Product"
+            raise_if_model_not_found!(true, 'Product Not Found')
         end
 
-        unless validate_cart_available?(cart_id)
-            @business_errors[:cart_id] = 'Invalid Cart'
+        unless validate_cart_available?(cart_id) && validate_cart_belongs_to_user?(cart_id, params[:user_id])
+            raise_if_model_not_found!(true, 'Cart Not Found')
         end
-
-        unless validate_cart_belongs_to_user?(cart_id, params[:user_id])
-            @business_errors[:user_id] = 'You Do Not Have Access To This Cart'
-        end
-
-        raise_if_business_rule_violated!(@business_errors.any?, 'Cart Validation Failed', @business_errors)
     end
 
     def validate_cart_product_schema(cart_id, product_id, params)
@@ -284,7 +271,7 @@ class CartService
         @business_errors = {}
 
         unless client_validation(params[:user_id]) 
-            @business_errors[:user_id] = "Invalid User"
+            raise_if_model_not_found!(true, 'User Not Found')
         end
 
         if validate_user_already_has_active_cart(params[:user_id])

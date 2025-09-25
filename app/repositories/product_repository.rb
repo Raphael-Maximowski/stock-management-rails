@@ -29,6 +29,6 @@ class ProductRepository
     end
 
     def product_available?(id, available_stock)
-        @model.where(id: id, active: 1).where("available_stock > ?", available_stock).exists?
+        @model.where(id: id, active: 1).where("available_stock >= ?", available_stock).exists?
     end
 end

@@ -74,7 +74,7 @@ class ProductService
         @business_errors = {}
 
         if !validate_product_owner_exists(params[:user_id])
-            @business_errors[:user_id] = 'Invalid User Id'
+            raise_if_model_not_found!(true, "User Not Found")
         end
 
         if validate_product_name_registered(params[:name])
