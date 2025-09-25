@@ -7,6 +7,10 @@ class UserRepository
         @model.find_by(id: id)
     end
 
+    def find_by_email(email)
+        @model.find_by(email: email)
+    end
+
     def list
         @model.all
     end

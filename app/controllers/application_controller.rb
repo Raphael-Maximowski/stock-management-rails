@@ -3,6 +3,8 @@ class ApplicationController < ActionController::API
     rescue_from ErrorHandling::BusinessRuleError, with: :handle_business_error
     rescue_from ErrorHandling::EmptyRuleError, with: :handle_empty_validation_error
 
+    before_action :authenticate_request
+
     def handle_empty_validation_error(exception)
         error_details = exception.error_details || {}
     
@@ -34,4 +36,25 @@ class ApplicationController < ActionController::API
             }
         }, status: :conflict 
   end
+
+  private
+
+    private
+
+    def authenticate_request
+        header = request.headers['Authorization']
+        token = header&.split(' ')&.last
+
+    if token
+        decoded = JwtService.decode(token)
+        if decoded && (user_id = decoded[:user_id])
+        @current_user = User.find_by(id: user_id)
+        end
+    end
+        render json: { error: 'Not Authenticated' }, status: :unauthorized unless @current_user
+    end
+
+    def current_user
+        @current_user
+    end
 end
