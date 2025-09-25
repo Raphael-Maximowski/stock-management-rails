@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_22_230306) do
   create_table "cart_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "quantity", null: false
     t.bigint "cart_id", null: false
@@ -49,21 +49,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
     t.check_constraint "`reserved_stock` >= 0", name: "positive_reserved_stock"
   end
 
-  create_table "stock_histories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "event_type", null: false
-    t.integer "reserved_stock_before", null: false
-    t.integer "reserved_stock_after", null: false
-    t.integer "available_stock_before", null: false
-    t.integer "available_stock_after", null: false
-    t.text "reason"
-    t.bigint "cart_id", null: false
-    t.bigint "product_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cart_id"], name: "index_stock_histories_on_cart_id"
-    t.index ["product_id"], name: "index_stock_histories_on_product_id"
-  end
-
   create_table "stock_reservations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "quantity", null: false
     t.string "reservation_status", default: "active"
@@ -78,6 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
+    t.string "password_digest", null: false
     t.string "role", default: "manager"
     t.string "status", default: "active"
     t.datetime "created_at", null: false
@@ -89,8 +75,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230920) do
   add_foreign_key "cart_products", "products"
   add_foreign_key "carts", "users"
   add_foreign_key "products", "users"
-  add_foreign_key "stock_histories", "carts"
-  add_foreign_key "stock_histories", "products"
   add_foreign_key "stock_reservations", "carts"
   add_foreign_key "stock_reservations", "products"
 end

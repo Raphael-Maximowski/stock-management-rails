@@ -11,11 +11,6 @@ class UsersController < ApplicationController
         render json: @user, status: :ok
     end
 
-    def create
-        @user = @user_service.create_user(user_params)
-        render json: @user, status: :created
-    end
-
     def update
         @user = @user_service.update_user(user_params)
         render json: @user, status: :ok
