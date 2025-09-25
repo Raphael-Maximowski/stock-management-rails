@@ -175,7 +175,7 @@ class CartService
     end
 
     def find_active_cart(cart_id)
-        @cart = @cart_repository.find_cart_based_in_status(cart_id, 'active')
+        @cart = @cart_repository.find(cart_id)
         raise_if_model_not_found!(@cart.nil?, 'Cart Not')
     end
 
@@ -300,7 +300,7 @@ class CartService
     end
 
     def validate_cart_available?(cart_id)
-        @cart_repository.cart_exists_based_in_status?(cart_id, 'active')
+        @cart_repository.cart_exists?(cart_id)
     end
 
     def validate_product_available?(product_id, minum_available_stock)

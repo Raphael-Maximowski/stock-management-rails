@@ -4,11 +4,11 @@ class ProductRepository
     end
 
     def find(id)
-        @model.find_by(id: id)
+        @model.find_by(id: id, active: true)
     end
 
     def list 
-        @model.all
+        @model.where(active: true)
     end
 
     def create(params)
@@ -29,6 +29,6 @@ class ProductRepository
     end
 
     def product_available?(id, available_stock)
-        @model.where(id: id, active: 1).where("available_stock >= ?", available_stock).exists?
+        @model.where(id: id, active: true).where("available_stock >= ?", available_stock).exists?
     end
 end
