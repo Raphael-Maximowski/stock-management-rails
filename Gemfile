@@ -10,7 +10,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
-gem 'mysql2'
+gem 'pg'
 gem 'dry-validation'
 gem 'active_model_serializers', '~> 0.10.13'
 gem "bootsnap", require: false

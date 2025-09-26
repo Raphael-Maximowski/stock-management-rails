@@ -11,7 +11,10 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_09_22_230306) do
-  create_table "cart_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
+
+  create_table "cart_products", force: :cascade do |t|
     t.integer "quantity", null: false
     t.bigint "cart_id", null: false
     t.bigint "product_id", null: false
@@ -21,7 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230306) do
     t.index ["product_id"], name: "index_cart_products_on_product_id"
   end
 
-  create_table "carts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "carts", force: :cascade do |t|
     t.string "cart_status", default: "active"
     t.integer "total_items", default: 0
     t.decimal "total_amount", precision: 10, scale: 2, default: "0.0"
@@ -32,7 +35,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230306) do
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
-  create_table "products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
     t.decimal "price", precision: 10, scale: 2, null: false
@@ -44,12 +47,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230306) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_products_on_name", unique: true
     t.index ["user_id"], name: "index_products_on_user_id"
-    t.check_constraint "`available_stock` >= 0", name: "positive_avaliable_stock"
-    t.check_constraint "`price` >= 0", name: "positive_price"
-    t.check_constraint "`reserved_stock` >= 0", name: "positive_reserved_stock"
+    t.check_constraint "available_stock >= 0", name: "positive_avaliable_stock"
+    t.check_constraint "price >= 0::numeric", name: "positive_price"
+    t.check_constraint "reserved_stock >= 0", name: "positive_reserved_stock"
   end
 
-  create_table "stock_reservations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "stock_reservations", force: :cascade do |t|
     t.integer "quantity", null: false
     t.string "reservation_status", default: "active"
     t.bigint "cart_id", null: false
@@ -60,7 +63,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_22_230306) do
     t.index ["product_id"], name: "index_stock_reservations_on_product_id"
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
     t.string "password_digest", null: false

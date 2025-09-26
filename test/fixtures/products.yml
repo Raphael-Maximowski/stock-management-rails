@@ -11,8 +11,8 @@
 #  id              :bigint           not null, primary key
 #  active          :boolean          default(TRUE)
 #  available_stock :integer          not null
-#  description     :text(65535)
-#  name            :string(255)      not null
+#  description     :text
+#  name            :string           not null
 #  price           :decimal(10, 2)   not null
 #  reserved_stock  :integer          default(0)
 #  created_at      :datetime         not null

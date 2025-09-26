@@ -10,7 +10,7 @@
 #
 #  id                 :bigint           not null, primary key
 #  quantity           :integer          not null
-#  reservation_status :string(255)      default("active")
+#  reservation_status :string           default("active")
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  cart_id            :bigint           not null
