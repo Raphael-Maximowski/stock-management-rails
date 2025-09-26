@@ -56,6 +56,7 @@ class ApplicationController < ActionController::API
         decoded = JwtService.decode(token)
         if decoded && (user_id = decoded[:user_id])
         @current_user = User.find_by(id: user_id)
+
         end
     end
         handle_unauthorized_validation_error() unless @current_user
