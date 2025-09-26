@@ -1,18 +1,9 @@
-default: &default
-  adapter: mysql2
-  encoding: utf8mb4
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-  username: <%= ENV['DB_USERNAME'] || 'root' %>
-  password: <%= ENV['DB_PASSWORD'] || 'password' %>
-  host: <%= ENV['DB_HOST'] || 'localhost' %>
-  port: <%= ENV['DB_PORT'] || 3306 %>
-
+---
 development:
-  <<: *default
-  database: stock_management_development
+  adapter: mysql2
 
 test:
-  <<: *default
-  database: stock_management_test
+  adapter: mysql2
 
+production:
+  adapter: mysql2
